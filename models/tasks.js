@@ -36,6 +36,6 @@ const taskSchema = new mongoose.Schema({
         ref: "users",
         required: true
     }
-});
+}, {versionKey : false});
 
 module.exports = mongoose.model('tasks', taskSchema);

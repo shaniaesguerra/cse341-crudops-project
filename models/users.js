@@ -23,6 +23,6 @@ const userSchema = new mongoose.Schema({
         enum: ["admin", "member"],
         default: "member"
     }
-});
+}, {versionKey: false});
 
 module. exports = mongoose.model("users", userSchema)
