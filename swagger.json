@@ -5,7 +5,7 @@
     "description": "CSE 341: Week 03 Project2 CRUD Operations",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "https://cse341-crudops-project.onrender.com",
   "basePath": "/",
   "schemes": [
     "http",
