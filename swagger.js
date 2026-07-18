@@ -12,5 +12,7 @@ const doc = {
 const outputFile = './swagger.json';
 const endpointsFiles = ['./routes/index.js'];
 
-//Generate Swagger.json
-swaggerAutogen(outputFile, endpointsFiles, doc);
+//Generate Swagger.json before the server starts
+swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
+    require('./server');
+});
