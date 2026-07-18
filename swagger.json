@@ -8,8 +8,7 @@
   "host": "https://cse341-crudops-project.onrender.com",
   "basePath": "/",
   "schemes": [
-    "https",
-    "http"
+    "https"
   ],
   "paths": {
     "/": {
