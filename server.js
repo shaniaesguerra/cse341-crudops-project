@@ -18,7 +18,8 @@ app.use((req, res, next) => {
 });
 app.use('/', require('./routes'));
 
-mongodb.initDb(async () => {
+//Start server:
+const startServer = async () => {
   try {
     await mongodb.initDb();
     app.listen(port, () => {
@@ -27,4 +28,6 @@ mongodb.initDb(async () => {
   } catch (err) {
     console.error('Failed to connect to database:', err);
   }
-})();
+};
+
+startServer();
