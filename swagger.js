@@ -6,7 +6,7 @@ const doc = {
         description: 'CSE 341: Week 03 Project2 CRUD Operations'
     },
     host: 'localhost:3000',
-    schemes: ['http', 'https']
+    schemes: ['https','http']
 };
 
 const outputFile = './swagger.json';
