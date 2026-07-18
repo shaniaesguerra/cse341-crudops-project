@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Email is required'],
         unique: true,
         lowercase: true,
-        match:[ /^\S+@\S+\.\S$/, 'Please provide a valid email address (e.g email@example.com)']
+        match:[ /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please provide a valid email address (e.g email@example.com)']
     },
     role: {
         type: String,

@@ -29,6 +29,10 @@ const getTaskById = async (req, res) => {
     }
     catch (error) {
         console.error(error);
+        if (error.name === 'CastError') {
+            // error message for invalid MongoDb id
+            return res.status(400).json({error: error.message})
+        }
         res.status(500).json({ error: error.message });
     }
 };
