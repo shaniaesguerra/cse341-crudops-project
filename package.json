@@ -1,0 +1,30 @@
+{
+  "name": "cse341-crudops-project",
+  "version": "1.0.0",
+  "description": "CSE 341 Project 2",
+  "homepage": "https://github.com/shaniaesguerra/cse341-crudops-project#readme",
+  "bugs": {
+    "url": "https://github.com/shaniaesguerra/cse341-crudops-project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaniaesguerra/cse341-crudops-project.git"
+  },
+  "license": "ISC",
+  "author": "Shania Esguerra",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.3.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.5.0",
+    "mongoose": "^9.7.4",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
