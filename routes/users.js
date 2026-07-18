@@ -1,9 +1,7 @@
 const router = require('express').Router();
-const user = require('../models/users');
+const usersController = require('../controllers/users');
 
-router.get('/', async (req, res) => {
-    const user = await user.find();
-    res.json(user);
-});
+router.get('/', usersController.getAllUsers);
+router.get('/:id', usersController.getUserById);
 
 module.exports = router;

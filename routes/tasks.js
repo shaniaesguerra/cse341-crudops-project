@@ -1,9 +1,7 @@
 const router = require('express').Router();
-const task = require('../models/tasks');
+const tasksController = require('../controllers/tasks');
 
-router.get('/', async (req, res) => {
-    const tasks = await task.find();
-    res.json(tasks);
-});
+router.get('/', tasksController.getAllTasks);
+router.get('/:id', tasksController.getTaskById);
 
 module.exports = router;
