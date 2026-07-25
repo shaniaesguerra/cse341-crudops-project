@@ -1,12 +1,23 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongodb = require('./data/database');
-const app = express();
+require('dotenv').config();
 
+const express= require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const LocalAuth = require('passport-local').Strategy;
+const GoogleAuth = require('passport-google-oauth20').Strategy;
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const mongodb = require('./data/database');
+const User = require('./models/users');
+
+const app = express();
 const port = process.env.PORT || 3000;
 
-//Middlewares
+//----------------- Middlewares -----------------
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -16,6 +27,128 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
+
+//----------------- Session Setup -----------------
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "dev-secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// ----------------- Passport Setup -----------------
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ----------------- Passport Session Helpers -----------------
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
+// ----------------- Local Login  -----------------
+passport.use(
+  new LocalAuth(
+    { usernameField: 'email' },
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+
+        if (!user || !user.password) {
+          return done(null, false, { message: 'Invalid email or password' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+          return done(null, false, { message: 'Invalid email or password' });
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
+
+// ----------------- Google OAuth -----------------
+passport.use(
+  new GoogleAuth(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL:
+        process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/auth/google/callback',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({
+          $or: [{ googleId: profile.id }, { email: profile.emails?.[0]?.value }],
+        });
+
+        if (!user) {
+          user = await User.create({
+            firstName: profile.name?.givenName || 'Google',
+            lastName: profile.name?.familyName || 'User',
+            email: profile.emails?.[0]?.value,
+            googleId: profile.id,
+            authMethod: 'google',
+          });
+        } else {
+          if (!user.googleId) {
+            user.googleId = profile.id;
+            user.authMethod = 'google';
+            await user.save();
+          }
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
+
+// user model for local
+app.post("/register", async (req, res) => {
+  try {
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    const user = await User.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+      authMethod: "local",
+    });
+
+    res.status(201).json({
+      message: "User created",
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.use('/', require('./routes'));
 
 //Start server:

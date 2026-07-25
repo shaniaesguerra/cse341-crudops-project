@@ -1,13 +1,14 @@
-const router = require('express').Router();
+const express = require("express");
+const router = express.Router();
 
-router.use("/", require('./swagger'));
-
+router.use('/', require('./swagger'));
+router.use('/', require('./auth'));
 router.get('/', (req, res) => {
     //#swagger.tags=['Hello World!']
     res.send('Hello World!<br>' +
         'For <strong>all tasks</strong>, go to <strong>/tasks</strong><br>' +
         'For <strong>single task</strong>, go to <strong>/tasks/:id</strong><br>' +
-        'For <strong>all users</strong>, go to <strong>/users</strong>' +
+        'For <strong>all users</strong>, go to <strong>/users</strong><br>' +
         'For <strong>single user</strong>, go to <strong>/users/:id</strong>'
     );
 });

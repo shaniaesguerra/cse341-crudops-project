@@ -37,13 +37,20 @@ const getUserById = async (req, res) => {
 const createUser= async (req, res) => {
     //#swagger.tags=['Users']
     try {
-        const user = await userModel.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            role: req.body.role
-        });
+        const existingUser = await userModel.findOne({ email: req.body.email });
+        if (existingUser) {
+        return res.status(400).json({ message: "Email already exists" });
+        }
 
+        const user = await userModel.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password || null,
+        authMethod: req.body.authMethod || "local",
+        role: req.body.role || "member",
+        });
+        
         //return 201 Created status code
         return res.status(201).json(user);
     }

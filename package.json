@@ -20,12 +20,17 @@
     "swagger": "node swagger.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.3.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mongodb": "^7.5.0",
     "mongoose": "^9.7.4",
-    "swagger-autogen": "^2.23.7",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "swagger-autogen": "^2.9.2",
     "swagger-ui-express": "^5.0.1"
   }
 }
