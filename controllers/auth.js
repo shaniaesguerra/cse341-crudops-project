@@ -1,6 +1,7 @@
 const User = require('../models/users');
 
 const register = async (req, res) => {
+    //#swagger.tags=['Authorization']
   try {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
@@ -37,6 +38,7 @@ const register = async (req, res) => {
 };
 
 const login = (req, res) => {
+    //#swagger.tags=['Authorization']
   return res.json({
     message: "Logged in successfully",
     user: req.user,
@@ -44,10 +46,12 @@ const login = (req, res) => {
 };
 
 const googleCallback = (req, res) => {
+    //#swagger.tags=['Authorization']
   return res.redirect("/profile");
 };
 
 const profile = (req, res) => {
+    //#swagger.tags=['Authorization']
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Not logged in" });
   }
@@ -56,6 +60,7 @@ const profile = (req, res) => {
 };
 
 const logout = (req, res, next) => {
+    //#swagger.tags=['Authorization']
   req.logout((err) => {
     if (err) return next(err);
     return res.json({ message: "Logged out" });
