@@ -82,7 +82,7 @@
     },
     "/\r/auth/google": {
       "get": {
-        "tags": [],
+        "tags": ["Authorization"],
         "description": "",
         "parameters": [],
         "responses": {}
