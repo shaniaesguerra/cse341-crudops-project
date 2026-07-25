@@ -1,19 +1,12 @@
 const express = require('express');
 const passport = require('passport');
-const userController = require('../controllers/users');
+const authController = require("../controllers/auth");
 
 const router = express.Router();
 
 //Local Registration
-router.post("/register", userController.createUser);
-router.post('/login', passport.authenticate('local'),
-    (req, res) => {
-        res.json({
-            message: "Logged in successfully",
-            user: req.user
-        });
-    }
-);
+router.post("/register", authController.register);
+router.post('/login', passport.authenticate('local'), authController.login);
 
 //Google Auth
 router.get(
@@ -24,26 +17,13 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    res.redirect("/profile");
-  }
+  authController.googleCallback
 );
 
 // View Profile
-router.get("/profile", (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: "Not logged in" });
-  }
-
-  res.json({ user: req.user });
-});
+router.get("/profile", authController.profile);
 
 //Logout
-router.post("/logout", (req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    res.json({ message: "Logged out" });
-  });
-});
+router.post("/logout", authController.logout);
 
 module.exports = router;

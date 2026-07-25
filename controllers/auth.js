@@ -1,7 +1,5 @@
 const User = require('../models/users');
 
-const User = require("../models/users");
-
 const register = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });

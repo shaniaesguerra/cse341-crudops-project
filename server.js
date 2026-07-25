@@ -119,35 +119,6 @@ passport.use(
   )
 );
 
-// user model for local
-app.post("/register", async (req, res) => {
-  try {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
-    const user = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password,
-      authMethod: "local",
-    });
-
-    res.status(201).json({
-      message: "User created",
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 app.use('/', require('./routes'));
 
