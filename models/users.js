@@ -39,15 +39,17 @@ const userSchema = new mongoose.Schema({
     }
 }, {versionKey: false});
 
-userSchema.pre("save", async function (next) {
-    userSchema.pre("save", async function (next) {
-        if (this.authMethod !== "local") return next();
-        if (!this.isModified("password") || !this.password) return next();
+userSchema.pre("save", async function () {
+  try {
+    if (this.authMethod !== "local") return;
+    if (!this.isModified("password") || !this.password) return;
 
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    })
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    throw error;
+  }
 });
 
 module.exports = mongoose.model("users", userSchema)
