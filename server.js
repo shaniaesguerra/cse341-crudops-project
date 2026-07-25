@@ -29,11 +29,18 @@ app.use((req, res, next) => {
 });
 
 //----------------- Session Setup -----------------
+app.set('trust proxy', 1);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "dev-secret",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: 'lax',
+    }
   })
 );
 
